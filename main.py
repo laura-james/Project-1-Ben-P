@@ -27,7 +27,7 @@ def main():
     [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
     ]
     player = Player(100, 200, 1)
@@ -46,7 +46,7 @@ def main():
         for row in range(height):
             for col in range(width):
                 if map1[row][col] == 1:
-                    boxes.append(Box(row,col))
+                    boxes.append(Box(col*Tilesize,row*Tilesize))
                 #elif map1[row][col] == 0:
                     #Tile = BACKGROUND
                 #DISPLAY.blit(Tile[map1[row][col]],(col * Tilesize,row*Tilesize,Tilesize,Tilesize))
