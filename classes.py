@@ -42,36 +42,28 @@ class Player(Sprite):
         self.hitwallL = False
         self.score = 0
 
-    def checkcollision(self, Box, Coin):
+    def checkcollision(self, Box):
         if self.rect.colliderect(Box.rect) and self.vsp > 0 and self.rect.bottom < Box.rect.centery: #check that the bottom of the player is less than the centre of the box (as y is inverse)
             self.ground = True
             self.rect.bottom = Box.rect.top
-
-
-        if self.rect.colliderect(Coin.rect):
-            self.score +=1
-
-
-
-        if self.rect.colliderect(Box.rect)   and self.rect.left < Box.rect.right and self.vsp > 0 and self._hsp < 0:
+        if self.rect.colliderect(Box.rect)   and \
+                self.rect.left < Box.rect.right and \
+                self.vsp > 0 and self._hsp < 0:
             self.rect.left = Box.rect.right
             self.hitwallL = True
-            print("hitwalll")
+            #print("hitwalll")
         else:
             self.hitwallL = False
 
 
-        if self.rect.colliderect(Box.rect)   and self.rect.right > Box.rect.left and self.vsp > 0 and self._hsp > 0:
+        if self.rect.colliderect(Box.rect)   and\
+                self.rect.right > Box.rect.left and\
+                self.vsp > 0 and self._hsp > 0:
             self.rect.right = Box.rect.left
             self.hitwallR = True
-            print("hitwallr")
+            #print("hitwallr")
         else:
             self.hitwallR = False
-
-
-        #if self.rect.colliderect(Coin.rect):
-            #self.score += 1
-            #so far 
 
 
         if self.ground == True:
@@ -80,12 +72,16 @@ class Player(Sprite):
                 self.ground = True
 
 
-             #   self.rect.y -=1
+    def checkcollideCoin(self, Coin):
+        global coins
+        print("checking if colliding with coin!")
+        if self.rect.colliderect(Coin.rect):
+            self.score +=1
+            print(self.score)
+            coins.pop()
 
 
-
-
-    def update(self, list):
+    def update(self, boxes, coins):
 
         key = pygame.key.get_pressed()  # detects if a key is pressed
 
@@ -132,11 +128,14 @@ class Player(Sprite):
             self.hitwallL == False
 #add friction after bouncing off of wall
         self.ground = False
-        for Box in list:
-            self.checkcollision(Box,Coin)  # loops through the box list checking for collisions
+        for Box in boxes:
+            self.checkcollision(Box)  # loops through the box list checking for collisions
 
         if self.ground == True:  # while player is on the ground it is set to true
             self.vsp = 0  # when the player is on the ground the vertical speed is set to 0
+
+        for Coin in coins:
+            self.checkcollideCoin(Coin)  # loops through the coins list checking for collisions
 
     def move(self, x, y):
             self.rect.move_ip([x, y])
@@ -148,6 +147,8 @@ class Player(Sprite):
 class Coin(Sprite):
     def __init__(self, startx, starty):
         super().__init__(["sprites/coins2.png"], startx, starty)
+        self.Coinsizewidth = 30
+        self.Coinsizeheight = 43
 
 
 
