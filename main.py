@@ -1,5 +1,5 @@
 import pygame
-from classes import Box, Player
+from classes import Box, Player, Coin
 
 BACKGROUND = (255, 0, 0)
 
@@ -12,48 +12,76 @@ def main():
     screen = pygame.display.set_mode((900, 900))
 
 
-    Tilesize = 40
+    Tilesize = 70
     width = 12
     height = 12
+    Coinsize = 72
     DISPLAY = pygame.display.set_mode((width * Tilesize, height * Tilesize))
-    Tile = pygame.surface.Surface((Tilesize,Tilesize))
-    map1 = [[1,0,0,0,0,0,1,0,0,0,0,0,1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-    ]
-    player = Player(100, 200, 1)
+    #Tile = pygame.surface.Surface((Tilesize,Tilesize))
+    #map1 = [[1,0,0,0,0,0,1,0,0,0,0,0,1],
+    #    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    #    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    #    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    #    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    #    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    #    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    #    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    #    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    #    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    #    [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1],
+    #    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    #    ]
+    player = Player(100, 600, 1)
     boxes = []
+    coins = []
     #for bx in range(0, 600, 70):
         #boxes.append(Box(bx, 300))
         #boxes.append(Box(500, 200))
-    Tile = []
+    #Tile = []
     while True:
         pygame.event.pump()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
 
         player.update(boxes)
+        f = open("map.txt")
+        mapgrid = f.readlines()
+        #print(mapgrid)
+        f.close()
+        # print(len(mapgrid))
+        for row in range(len(mapgrid)): #loops through rows of map
+
+
+            maprow = mapgrid[row].strip().split(",") #splits the string of map.txt into just single 1's and 0's
+            #print(maprow)
+            # print(splitstuff)
+
+            for col in range(len(maprow)): #loops through columns of map
+                #print(maprow[col])
+                if maprow[col] == "1": #there is a space before the 1
+                    boxes.append(Box(col*Tilesize,row*Tilesize)) #writes to the boxes array the boxes to then be drawn later on
+                elif maprow[col] == "2":
+                  coins.append(Coin(col*Coinsize,row*Coinsize))
+
+
+
+
 
         # Drawing
-        screen.fill(BACKGROUND)
-        for row in range(height):
-            for col in range(width):
-                if map1[row][col] == 1:
-                    boxes.append(Box(col*Tilesize,row*Tilesize))
+
+
+
+                screen.fill(BACKGROUND)
                 #elif map1[row][col] == 0:
                     #Tile = BACKGROUND
                 #DISPLAY.blit(Tile[map1[row][col]],(col * Tilesize,row*Tilesize,Tilesize,Tilesize))
 
 
 
-
+        #print(boxes)
+        for coin in coins:
+            coin.draw(screen)
         for box in boxes:
            box.draw(screen)
         player.draw(screen)
@@ -65,6 +93,7 @@ def main():
 
 
 main()
+pygame.quit()
 #for bx in range(0, 600, 70):
      #   boxes.append(Box(bx, 300))
     #boxes.append(Box(500, 200))

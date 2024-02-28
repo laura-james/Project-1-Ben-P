@@ -34,17 +34,23 @@ class Player(Sprite):
         self.jumpspeed = 10
         self.vsp = 0  # vertical speed
         self._hsp = 0  # horizontal speed
-        self.gravity = 0.5
+        self.gravity = 0.8
         self.ground = False
-        self.collide = True
+        #self.collide = True
         self.friction = 0.1
         self.hitwallR = False
         self.hitwallL = False
+        self.score = 0
 
-    def checkcollision(self, Box):
+    def checkcollision(self, Box, Coin):
         if self.rect.colliderect(Box.rect) and self.vsp > 0 and self.rect.bottom < Box.rect.centery: #check that the bottom of the player is less than the centre of the box (as y is inverse)
             self.ground = True
             self.rect.bottom = Box.rect.top
+
+
+        if self.rect.colliderect(Coin.rect):
+            self.score +=1
+
 
 
         if self.rect.colliderect(Box.rect)   and self.rect.left < Box.rect.right and self.vsp > 0 and self._hsp < 0:
@@ -63,14 +69,19 @@ class Player(Sprite):
             self.hitwallR = False
 
 
-
+        #if self.rect.colliderect(Coin.rect):
+            #self.score += 1
+            #so far 
 
 
         if self.ground == True:
-            self.rect.y += 1 #moving the player down 1 pixel to ensure that they are still on the ground
-            if self.rect.colliderect(Box.rect):
+            #self.rect.y += 1 #moving the player down 1 pixel to ensure that they are still on the ground
+            #if self.rect.colliderect(Box.rect):
                 self.ground = True
-                self.rect.y -=1
+
+
+             #   self.rect.y -=1
+
 
 
 
@@ -122,7 +133,7 @@ class Player(Sprite):
 #add friction after bouncing off of wall
         self.ground = False
         for Box in list:
-            self.checkcollision(Box)  # loops through the box list checking for collisions
+            self.checkcollision(Box,Coin)  # loops through the box list checking for collisions
 
         if self.ground == True:  # while player is on the ground it is set to true
             self.vsp = 0  # when the player is on the ground the vertical speed is set to 0
@@ -131,10 +142,19 @@ class Player(Sprite):
             self.rect.move_ip([x, y])
 
 
+
+
         # function to move the player
+class Coin(Sprite):
+    def __init__(self, startx, starty):
+        super().__init__(["sprites/coins2.png"], startx, starty)
 
 
 
 class Box(Sprite):
     def __init__(self, startx, starty):
         super().__init__(["sprites/boxAlt.png"], startx, starty)
+
+
+
+
